@@ -7,17 +7,21 @@ const tokens = (n) => {
 
 describe('Token', () => {
   let token;
-
+  let accounts;
+  let deployer;
   beforeEach(async () => {
     const Token = await ethers.getContractFactory('Token');
-    token = await Token.deploy('Girish Token', 'Girish', 18, 1000000);
+    accounts = await ethers.getSigners();
+    deployer = accounts[0];
+
+    token = await Token.deploy('Girish Token', 'Girish', 1000000);
   });
 
   describe('Deployment', () => {
     name1 = 'Girish Token';
     symbol = 'Girish';
     decimals = 18;
-    totalSupply = '1000000';
+    totalSupply = 1000000;
     it('has correct name', async () => {
       expect(await token.name()).to.equal(name1);
     });
@@ -29,6 +33,13 @@ describe('Token', () => {
     });
     it('has total supply', async () => {
       expect(await token.totalSupply()).to.equal(tokens(totalSupply));
+    });
+    it('assigns total supply to deployer', async () => {
+      console.log(deployer);
+
+      expect(await token.balanceOf(deployer.address)).to.equal(
+        tokens(totalSupply)
+      );
     });
   });
 });

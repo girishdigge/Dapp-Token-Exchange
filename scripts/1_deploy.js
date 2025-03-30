@@ -1,10 +1,13 @@
+const { ethers } = require('hardhat');
+
 async function main() {
   const Token = await ethers.getContractFactory('Token');
-  const token = await Token.deploy();
+  const token = await Token.deploy('Girish Token', 'Girish', 1000000);
 
-  await token.deployed();
+  // Wait for the deployment to be complete in ethers v6
+  await token.waitForDeployment();
 
-  console.log('Token deployed to:', token.address);
+  console.log('Token deployed to:', token.target);
 }
 
 main()
